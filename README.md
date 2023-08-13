@@ -4,6 +4,8 @@ Flake module to provide live server version of `cargo doc`
 
 ## Getting Started
 
+Example use: https://github.com/juspay/nix-browser/commit/a97ca7cd5e9be6f188368fc8580c4b652c272cec
+
 Import this along with the process-compose-flake module,
 
 ```nix
