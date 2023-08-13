@@ -1,6 +1,6 @@
 # cargo-doc-live
 
-Flake module to provide live server version of `cargo doc`
+Flake module to provide a live server version of `cargo doc` ― edit Rust code, and see the docs view in your web browser update automatically.
 
 ## Getting Started
 
