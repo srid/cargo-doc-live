@@ -17,10 +17,10 @@ imports = [
 ];
 ```
 
-Add the following to the `packages` of your devShell
+Add the following to the `nativeBuildInputs` of your devShell
 
 ```nix
-packages = [
+nativeBuildInputs = [
   config.process-compose.cargo-doc-live.outputs.package
 ];
 ```
