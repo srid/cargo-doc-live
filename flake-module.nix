@@ -44,6 +44,8 @@ in
                 cfg = config.cargo-doc-live;
                 port = builtins.toString cfg.port;
                 browser-sync = lib.getExe pkgs.nodePackages.browser-sync;
+                cargo-watch = lib.getExe pkgs.cargo-watch;
+                cargo = lib.getExe pkgs.cargo;
               in
               {
                 tui = false;
@@ -52,10 +54,10 @@ in
                   cargo-doc = {
                     command = builtins.toString (pkgs.writeShellScript "cargo-doc" ''
                       run-cargo-doc() {
-                        cargo doc --document-private-items --all-features
+                        ${cargo} doc --document-private-items --all-features
                         ${browser-sync} reload --port ${port}  # Trigger reload in browser
                       }; export -f run-cargo-doc
-                      cargo watch -s run-cargo-doc
+                      ${cargo-watch} watch -s run-cargo-doc
                     '');
                     readiness_probe = {
                       period_seconds = 1;
