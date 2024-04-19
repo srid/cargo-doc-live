@@ -32,7 +32,7 @@ in
         {
           options.cargo-doc-live = lib.mkOption {
             type = mainSubmodule;
-            description = lib.mdDoc ''
+            description = ''
               cargo-doc-live module options
             '';
             default = { };
