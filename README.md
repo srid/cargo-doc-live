@@ -6,9 +6,16 @@ https://github.com/srid/cargo-doc-live/assets/3998/37378858-dda1-40fb-8f6a-f76dc
 
 ## Getting Started
 
-Example use: https://github.com/juspay/nix-browser/commit/a97ca7cd5e9be6f188368fc8580c4b652c272cec
+Full example: https://github.com/srid/rust-nix-template
 
-Import this along with the process-compose-flake module,
+Add the following flake inputs,
+
+```nix
+process-compose-flake.url = "github:Platonic-Systems/process-compose-flake";
+cargo-doc-live.url = "github:srid/cargo-doc-live";
+```
+
+Import the relevant flake-parts modules,
 
 ```nix
 imports = [
@@ -17,10 +24,10 @@ imports = [
 ];
 ```
 
-Add the following to the `nativeBuildInputs` of your devShell
+Add the following to the `packages` of your devShell
 
 ```nix
-nativeBuildInputs = [
+packages = [
   config.process-compose.cargo-doc-live.outputs.package
 ];
 ```
