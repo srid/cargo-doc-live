@@ -49,7 +49,6 @@ in
               in
               {
                 tui = false;
-                port = 0; # process-compose exits silently if port is in use; default is 8080.
                 settings.processes = {
                   cargo-doc = {
                     command = builtins.toString (pkgs.writeShellScript "cargo-doc" ''
