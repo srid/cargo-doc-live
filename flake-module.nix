@@ -11,6 +11,7 @@ in
     perSystem = mkPerSystemOption
       ({ config, self', inputs', pkgs, system, ... }:
         let
+          cargoToml = lib.trivial.importTOML (self + /Cargo.toml);
           mainSubmodule = types.submodule {
             options = {
               port = mkOption {
@@ -21,13 +22,28 @@ in
               crateName = mkOption {
                 type = types.str;
                 description = "The crate to use when opening docs in browser";
-                default = builtins.replaceStrings [ "-" ] [ "_" ]
-                  ((lib.trivial.importTOML (self + /Cargo.toml)).package.name);
+                default = builtins.replaceStrings [ "-" ] [ "_" ] (cargoToml.package.name);
                 defaultText = "The crate name is derived from the Cargo.toml file";
+              };
+              rustDoc = mkOption {
+                type = types.submodule {
+                  options = {
+                    allFeatures = mkOption {
+                      type = types.bool;
+                      description = "The --all-features to use when running cargo doc cli";
+                      default = if lib.hasAttrByPath [ "package" "metadata" "docs" "rs" "all-features" ] cargoToml then cargoToml.package.metadata.docs.rs.all-features else false;
+                    };
+                    extraArgs = mkOption {
+                      type = types.listOf types.str;
+                      description = "The extra args to use when running cargo doc cli";
+                      default = if lib.hasAttrByPath [ "package" "metadata" "docs" "rs" "rustdoc-args" ] cargoToml then cargoToml.package.metadata.docs.rs.rustdoc-args else [ ];
+                    };
+                  };
+                };
+                default = { };
               };
             };
           };
-
         in
         {
           options.cargo-doc-live = lib.mkOption {
@@ -46,6 +62,9 @@ in
                 browser-sync = lib.getExe pkgs.nodePackages.browser-sync;
                 cargo-watch = lib.getExe pkgs.cargo-watch;
                 cargo = lib.getExe pkgs.cargo;
+                rustDocArgs = [
+                  (lib.optionalString cfg.rustDoc.allFeatures "--all-features")
+                ] ++ cfg.rustDoc.extraArgs;
               in
               {
                 tui = false;
@@ -53,7 +72,7 @@ in
                   cargo-doc = {
                     command = builtins.toString (pkgs.writeShellScript "cargo-doc" ''
                       run-cargo-doc() {
-                        ${cargo} doc --document-private-items --all-features
+                        ${cargo} doc ${builtins.concatStringsSep " " rustDocArgs}
                         ${browser-sync} reload --port ${port}  # Trigger reload in browser
                       }; export -f run-cargo-doc
                       ${cargo-watch} watch -s run-cargo-doc
