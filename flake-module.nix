@@ -43,7 +43,7 @@ in
               let
                 cfg = config.cargo-doc-live;
                 port = builtins.toString cfg.port;
-                browser-sync = lib.getExe pkgs.nodePackages.browser-sync;
+                browser-sync = pkgs.nodePackages.browser-sync + /bin/browser-sync;
                 cargo-watch = lib.getExe pkgs.cargo-watch;
                 cargo = lib.getExe pkgs.cargo;
               in
