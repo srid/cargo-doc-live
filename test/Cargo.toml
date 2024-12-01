@@ -1,0 +1,6 @@
+[package]
+name = "simple"
+
+[package.metadata.docs.rs]
+all-features = true
+rustdoc-args = ["--cfg", "docsrs", "--document-private-items"]
