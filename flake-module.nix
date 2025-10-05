@@ -21,8 +21,12 @@ in
               crateName = mkOption {
                 type = types.str;
                 description = "The crate to use when opening docs in browser";
-                default = builtins.replaceStrings [ "-" ] [ "_" ]
-                  ((lib.trivial.importTOML (self + /Cargo.toml)).package.name);
+                default = builtins.replaceStrings [ "-" ] [ "_" ] (
+                  let
+                    cargoToml = lib.trivial.importTOML (self + /Cargo.toml);
+                  in
+                  cargoToml.package.name or cargoToml.workspace.metadata.package-name
+                );
                 defaultText = "The crate name is derived from the Cargo.toml file";
               };
             };
